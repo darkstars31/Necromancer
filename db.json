@@ -1,1 +1,13 @@
-{}
+{
+  "crypt": [
+    {
+      "Url": "/account/updateUser/19159",
+      "HttpMethod": "PATCH",
+      "JsonPayLoad": {
+        "username": "enrollment@regression.com"
+      },
+      "JsonHeaders": null,
+      "JsonFailureStack": null
+    }
+  ]
+}
