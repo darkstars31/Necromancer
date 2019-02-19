@@ -30,11 +30,13 @@ app.post("/v1/deployhook", (req, res, next) => {
 
 app.get("/crypt", (req,res,next) => {
 	let dataset = null;
-	if(!req.query){
+	console.log(req.query);
+	if(Object.entries(req.query).length === 0 && req.query.constructor === Object){
 		dataset = dao.get("crypt").value();
 	} else {
 		dataset = dao.get("crypt").find(req.query).value();
 	}
+	
 	if(!dataset){
 		res.status(404).send("Not Found");		
 	}
@@ -46,7 +48,7 @@ function BuildDBGhoul(requestBody){
 	var undeadRequest = JSON.parse(requestBody.result.Message.split("SelfHealing:")[1]);
 	var ghoul = {
 		sourceApplication: requestBody.result.SourceName,
-		url: `${requestBody.result.dest} ${undeadRequest.Url}`,
+		url: `${requestBody.result.dest}${undeadRequest.Url}`,
 		httpMethod: undeadRequest.HttpMethod,
 		payLoad: undeadRequest.JsonPayLoad,
 		jsonHeaders: undeadRequest.JsonHeaders,
