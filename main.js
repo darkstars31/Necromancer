@@ -1,5 +1,4 @@
 
-
 var config  = require("./config");
 var dao 	= require("./dao");
 var logger  = config.logger;
@@ -13,15 +12,50 @@ app.use(express.json());
 console.log(`Necromancer Service is up on port: ${config.express.port}`);
 
 app.post("/v1/deployhook", (req, res, next) => {
-	console.log("One Failed Request has been sent to the crypt.")
-	var undeadRequest = JSON.parse(req.body.result.Message.split("SelfHealing:")[1]);	
-	dao.get("crypt").push(undeadRequest).write();
-	var item = dao.get("crypt").find({ method: "PATCH"}).value();
-	console.log(item);
-	logger.info(req.body);
+	try {
+		var undeadRequest = BuildDBGhoul(req.body);
+		if(undeadRequest){
+			dao.get("crypt").push(undeadRequest).write();
+		}
+		console.log(`Incoming request has been sent to the crypt. Source Application: ${undeadRequest.sourceApplication}`)	
+		logger.info(req.body);
+	} catch(e) {
+		console.error(`Incoming Request failed; RequestBody: ${req.body.result} Stack:`, e);
+		logger.error(req.body.result,e);
+	}
+
 	res.send();
 	
 });
 
+app.get("/crypt", (req,res,next) => {
+	let dataset = null;
+	if(!req.query){
+		dataset = dao.get("crypt").value();
+	} else {
+		dataset = dao.get("crypt").find(req.query).value();
+	}
+	if(!dataset){
+		res.status(404).send("Not Found");		
+	}
+	res.send(dataset);
+});
+
+
+function BuildDBGhoul(requestBody){
+	var undeadRequest = JSON.parse(requestBody.result.Message.split("SelfHealing:")[1]);
+	var ghoul = {
+		sourceApplication: requestBody.result.SourceName,
+		url: `${requestBody.result.dest} ${undeadRequest.Url}`,
+		httpMethod: undeadRequest.HttpMethod,
+		payLoad: undeadRequest.JsonPayLoad,
+		jsonHeaders: undeadRequest.JsonHeaders,
+		jsonFailureStack: undeadRequest.JsonFailureStack,
+		date: new Date().toISOString().substring(0,19),
+		retryAttempts: 0
+	};
+	return ghoul;
+
+}
 
 app.listen(config.express.port);
