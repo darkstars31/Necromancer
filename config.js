@@ -14,7 +14,7 @@ config.log4jsConfig = {
         categories: { default: { appenders: ["api"], level: "error" } }
 	}
 
-config.logger = log4js.getLogger("api");
+config._logger = log4js.getLogger("api");
 log4js.configure(config.log4jsConfig);
 	
 // Console Log Override to include Timestamps

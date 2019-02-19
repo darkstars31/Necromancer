@@ -1,13 +1,13 @@
 
 var config  = require("./config");
-var dao 	= require("./dao");
-var logger  = config.logger;
+var _dao 	= require("./dao");
+var _httpClient	= require("request-promise");
+var _logger  = config._logger;
 var helmet = require("helmet");
 var express = require("express");
 var app     = express();
 
-app.use(helmet());
-app.use(express.json());
+app.use(helmet(),express.json());
 
 console.log(`Necromancer Service is up on port: ${config.express.port}`);
 
@@ -15,13 +15,13 @@ app.post("/v1/deployhook", (req, res, next) => {
 	try {
 		var undeadRequest = BuildDBGhoul(req.body);
 		if(undeadRequest){
-			dao.get("crypt").push(undeadRequest).write();
+			_dao.get("crypt").push(undeadRequest).write();
 		}
 		console.log(`Incoming request has been sent to the crypt. Source Application: ${undeadRequest.sourceApplication}`)	
-		logger.info(req.body);
+		_logger.info(req.body);
 	} catch(e) {
 		console.error(`Incoming Request failed; RequestBody: ${req.body.result} Stack:`, e);
-		logger.error(req.body.result,e);
+		_logger.error(req.body.result,e);
 	}
 
 	res.send();
@@ -32,9 +32,9 @@ app.get("/crypt", (req,res,next) => {
 	let dataset = null;
 	console.log(req.query);
 	if(Object.entries(req.query).length === 0 && req.query.constructor === Object){
-		dataset = dao.get("crypt").value();
+		dataset = _dao.get("crypt").value();
 	} else {
-		dataset = dao.get("crypt").find(req.query).value();
+		dataset = _dao.get("crypt").find(req.query).value();
 	}
 	
 	if(!dataset){
@@ -43,8 +43,30 @@ app.get("/crypt", (req,res,next) => {
 	res.send(dataset);
 });
 
+app.get("/resurrect", (req,res,next) => {
+	var cryptDB = _dao.get("crypt").value();
 
-function BuildDBGhoul(requestBody){
+	cryptDB.forEach(item => {
+		
+	});
+});
+
+function ProcessGhoul(item) {
+	_httpClient({
+		method: item.httpMethod,
+		uri: item.url,
+		body: item.JsonPayLoad,
+		headers: JsonHeaders,
+		json: true
+	}).then( (result) => {
+
+	}).catch( err => {
+		_dao.
+		_logger.error(`Failed to send request to ${item.url} because `, err);
+	});
+}
+
+function BuildDBGhoul(requestBody) {
 	var undeadRequest = JSON.parse(requestBody.result.Message.split("SelfHealing:")[1]);
 	var ghoul = {
 		sourceApplication: requestBody.result.SourceName,
