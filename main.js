@@ -50,7 +50,7 @@ app.get("/resurrect", (req,res,next) => {
 	let successfullyProcessed = 0;
 	let failedProcessed = 0;
 	cryptDB.forEach(item => {
-		ProcessGhoul(item).then( (result) => {
+		ProcessGhoul(item).then((result) => {
 			_dao.get("crypt").remove(item).write();
 			successfullyProcessed++;
 		}).catch( err => {
@@ -81,13 +81,13 @@ function ProcessGhoul(item) {
 
 function BuildDBGhoul(requestBody) {
 	var undeadRequest = JSON.parse(requestBody.result.Message.split("SelfHealing:")[1]);
-	var ghoul = {
+	let ghoul = {
 		uid: uuid.v1(),
 		sourceApplication: requestBody.result.SourceName,
-		url: `${requestBody.result.dest}${undeadRequest.Url}`,
+		url: requestBody.result.des+undeadRequest.Url,
 		httpMethod: undeadRequest.HttpMethod,
 		payLoad: undeadRequest.JsonPayLoad,
-		jsonHeaders: undeadRequest.JsonHeaders ? undeadRequest.JsonHeaders: "",
+		jsonHeaders: undeadRequest.JsonHeaders != null ? undeadRequest.JsonHeaders: "",
 		jsonFailureStack: undeadRequest.JsonFailureStack,
 		date: new Date().toISOString().substring(0,19),
 		retryAttempts: 0
