@@ -12,6 +12,7 @@
     "helmet": "latest",
     "log4js": "latest",
     "lowdb": "^1.0.0",
+    "winser": "^1.0.3",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },
