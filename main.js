@@ -1,11 +1,12 @@
 
-var config  = require("./config");
-var _dao 	= require("./dao");
+var config  	= require("./config");
+var _dao 		= require("./dao");
 var _httpClient	= require("request-promise");
-var _logger  = config._logger;
-var helmet = require("helmet");
-var express = require("express");
-var app     = express();
+var uuid 		= require('uuid');
+var _logger  	= config._logger;
+var helmet 		= require("helmet");
+var express 	= require("express");
+var app     	= express();
 
 app.use(helmet(),express.json());
 
@@ -17,7 +18,7 @@ app.post("/v1/deployhook", (req, res, next) => {
 		if(undeadRequest){
 			_dao.get("crypt").push(undeadRequest).write();
 		}
-		console.log(`Incoming request has been sent to the crypt. Source Application: ${undeadRequest.sourceApplication}`)	
+		console.log(`Incoming request [${undeadRequest.uid}] has been sent to the crypt. Source Application: ${undeadRequest.sourceApplication}`)	
 		_logger.info(req.body);
 	} catch(e) {
 		console.error(`Incoming Request failed; RequestBody: ${req.body.result} Stack:`, e);
@@ -45,30 +46,36 @@ app.get("/crypt", (req,res,next) => {
 
 app.get("/resurrect", (req,res,next) => {
 	var cryptDB = _dao.get("crypt").value();
-
+	let successfullyProcessed = 0;
+	let failedProcessed = 0;
 	cryptDB.forEach(item => {
-		
+		ProcessGhoul(item).then( (result) => {
+			_dao.get("crypt").remove(item).write();
+			successfullyProcessed++;
+		}).catch( err => {
+			failedProcessed++;
+			_dao.get("crypt").find(item).assign({ retryAttempts: item.retryAttempts + 1}).write();
+			_logger.error(`Failed to send request [${item.uid}] to ${item.url} because `, err);
+		});;
 	});
+
+	res.send({SuccessfulRequests: successfullyProcessed, FailedRequests: failedProcessed });
 });
 
 function ProcessGhoul(item) {
-	_httpClient({
-		method: item.httpMethod,
-		uri: item.url,
-		body: item.JsonPayLoad,
-		headers: JsonHeaders,
-		json: true
-	}).then( (result) => {
-
-	}).catch( err => {
-		_dao.
-		_logger.error(`Failed to send request to ${item.url} because `, err);
-	});
+	return _httpClient({
+				method: item.httpMethod,
+				uri: item.url,
+				body: item.JsonPayLoad,
+				headers: JsonHeaders,
+				json: true
+			});
 }
 
 function BuildDBGhoul(requestBody) {
 	var undeadRequest = JSON.parse(requestBody.result.Message.split("SelfHealing:")[1]);
 	var ghoul = {
+		uid: uuid.v1(),
 		sourceApplication: requestBody.result.SourceName,
 		url: `${requestBody.result.dest}${undeadRequest.Url}`,
 		httpMethod: undeadRequest.HttpMethod,
