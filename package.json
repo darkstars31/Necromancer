@@ -3,8 +3,7 @@
   "version": "0.5.0",
   "license": "MIT",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
+    "start": "node main.js",
     "postinstall": "winser -i -s -c",
     "preuninstall": "winser -r -x -s"
   },
