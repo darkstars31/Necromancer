@@ -84,7 +84,7 @@ function BuildDBGhoul(requestBody) {
 	let ghoul = {
 		uid: uuid.v1(),
 		sourceApplication: requestBody.result.SourceName,
-		url: requestBody.result.des+undeadRequest.Url,
+		url: requestBody.result.des[0]+undeadRequest.Url,
 		httpMethod: undeadRequest.HttpMethod,
 		payLoad: undeadRequest.JsonPayLoad,
 		jsonHeaders: undeadRequest.JsonHeaders != null ? undeadRequest.JsonHeaders: "",
