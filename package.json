@@ -4,8 +4,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node main.js",
-    "postinstall": "winser -i -s -c",
-    "preuninstall": "winser -r -x -s"
+    "install-windows-service": "winser -i",
+    "uninstall-windows-service": "winser -r"
   },
   "private": true,
   "dependencies": {
