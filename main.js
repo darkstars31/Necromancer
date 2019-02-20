@@ -87,7 +87,7 @@ function BuildDBGhoul(requestBody) {
 		url: `${requestBody.result.dest}${undeadRequest.Url}`,
 		httpMethod: undeadRequest.HttpMethod,
 		payLoad: undeadRequest.JsonPayLoad,
-		jsonHeaders: undeadRequest.JsonHeaders,
+		jsonHeaders: undeadRequest.JsonHeaders ? undeadRequest.JsonHeaders: "",
 		jsonFailureStack: undeadRequest.JsonFailureStack,
 		date: new Date().toISOString().substring(0,19),
 		retryAttempts: 0
