@@ -3,6 +3,7 @@ var config  	= require("./config");
 var _dao 		= require("./dao");
 var _httpClient	= require("request-promise");
 var uuid 		= require('uuid');
+var childProc = require('child_process');
 var _logger  	= config._logger;
 var helmet 		= require("helmet");
 var express 	= require("express");
@@ -60,6 +61,12 @@ app.get("/resurrect", (req,res,next) => {
 	});
 
 	res.send({SuccessfulRequests: successfullyProcessed, FailedRequests: failedProcessed });
+});
+
+app.get("/self-update", (req,res,next) => {
+	_logger.info(`Self-Update Initiated. Getting Latest from Github and restarting the service.`);
+	childProc.exec('C:\selfhealing\Necromancer\GetLatest.bat', function(err, stdout, strerr) {});
+	res.send();
 });
 
 function ProcessGhoul(item) {
