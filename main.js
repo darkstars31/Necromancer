@@ -57,7 +57,7 @@ app.get("/resurrect", (req,res,next) => {
 		}).catch( err => {
 			failedProcessed++;
 			_dao.get("crypt").find(item).assign({ retryAttempts: item.retryAttempts + 1}).write();			
-			_logger.error(`Failed to send request [${item.uid}] to ${item.url} because `, err.StatusCodeError);
+			_logger.error(`Failed to send request [${item.uid}] to ${item.url} because `, err);
 		});;
 	});
 
