@@ -73,7 +73,7 @@ function ProcessGhoul(item) {
 				method: item.httpMethod,
 				uri: item.url,
 				body: item.JsonPayLoad,
-				headers: JsonHeaders,
+				headers: JsonHeaders != null ? {},
 				json: true
 			});
 }
@@ -87,7 +87,7 @@ function BuildDBGhoul(requestBody) {
 		url: destination+undeadRequest.Url,
 		httpMethod: undeadRequest.HttpMethod,
 		payLoad: undeadRequest.JsonPayLoad,
-		jsonHeaders: undeadRequest.JsonHeaders != null ? undeadRequest.JsonHeaders: "",
+		jsonHeaders: undeadRequest.JsonHeaders != null ? undeadRequest.JsonHeaders : {},
 		jsonFailureStack: undeadRequest.JsonFailureStack,
 		date: new Date().toISOString().substring(0,19),
 		retryAttempts: 0
