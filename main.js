@@ -46,13 +46,12 @@ app.get("/crypt", (req,res,next) => {
 });
 
 app.get("/resurrect", (req,res,next) => {
-	var finishedProcessing = false;
 	var cryptDB = _dao.get("crypt").value();
-	var successfullyProcessed = 0;
-	var failedProcessed = 0;
+	console.log(`Resurrecting ${cryptDB.length} Ghouls from the Crypt.`);
+	let successfullyProcessed = 0;
+	let failedProcessed = 0;
 	cryptDB.forEach( (item,index) => {
 		ProcessGhoul(item).then((result) => {
-			console.log(result);
 			_dao.get("crypt").remove(item).write();
 			successfullyProcessed++;
 		}).catch( err => {
@@ -65,7 +64,6 @@ app.get("/resurrect", (req,res,next) => {
 			}
 		});		
 	});
-
 });
 
 app.get("/self-update", (req,res,next) => {
@@ -105,6 +103,6 @@ function BuildDBGhoul(requestBody) {
 	return ghoul;
 }
 
-	
+
 
 app.listen(config.express.port);
