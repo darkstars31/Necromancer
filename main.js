@@ -73,7 +73,7 @@ function ProcessGhoul(item) {
 				method: item.httpMethod,
 				uri: item.url,
 				body: item.JsonPayLoad,
-				headers: JsonHeaders != null ? {},
+				headers: JsonHeaders,
 				json: true
 			});
 }
