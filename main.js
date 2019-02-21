@@ -80,7 +80,7 @@ function ProcessGhoul(item) {
 
 function BuildDBGhoul(requestBody) {
 	var undeadRequest = JSON.parse(requestBody.result.Message.split("SelfHealing:")[1]);
-	var destination = JSON.parse(requestBody.result.dest)[0];
+	var destination = requestBody.result.dest[0];
 	let ghoul = {
 		uid: uuid.v1(),
 		sourceApplication: requestBody.result.SourceName,
