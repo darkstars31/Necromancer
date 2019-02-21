@@ -56,7 +56,7 @@ app.get("/resurrect", (req,res,next) => {
 		}).catch( err => {
 			failedProcessed++;
 			_dao.get("crypt").find(item).assign({ retryAttempts: item.retryAttempts + 1}).write();
-			_logger.error(`Failed to send request [${item.uid}] to ${item.url} because `, err);
+			_logger.error(`Failed to send request [${item.uid}] to ${item.url} because `, filterException(err));
 		});;
 	});
 
@@ -98,7 +98,13 @@ function BuildDBGhoul(requestBody) {
 		retryAttempts: 0
 	};
 	return ghoul;
-
 }
+
+function filterException(err) {
+	return [ err.message,
+			err.statusCode,
+	];
+};
+	
 
 app.listen(config.express.port);
