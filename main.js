@@ -69,13 +69,16 @@ app.get("/self-update", (req,res,next) => {
 });
 
 function ProcessGhoul(item) {
-	return _httpClient({
-				method: item.httpMethod,
-				uri: item.url,
-				body: item.JsonPayLoad,
-				headers: JsonHeaders,
-				json: true
-			});
+	let httpOptions = {
+		method: item.httpMethod,
+		uri: item.url,
+		body: item.JsonPayLoad,
+		json: true
+	};
+	if(item.jsonHeaders){
+		httpOptions.headers = item.jsonHeaders;
+	}
+	return _httpClient(httpOptions);
 }
 
 function BuildDBGhoul(requestBody) {
