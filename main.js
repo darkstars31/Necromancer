@@ -71,7 +71,7 @@ app.get("/self-update", (req,res,next) => {
 function ProcessGhoul(item) {
 	let httpOptions = {
 		method: item.httpMethod,
-		uri: item.url,
+		uri: "https://"+item.url,
 		body: item.JsonPayLoad,
 		json: true
 	};
