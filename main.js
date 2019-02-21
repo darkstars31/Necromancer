@@ -32,7 +32,6 @@ app.post("/v1/deployhook", (req, res, next) => {
 
 app.get("/crypt", (req,res,next) => {
 	let dataset = null;
-	console.log(req.query);
 	if(Object.entries(req.query).length === 0 && req.query.constructor === Object){
 		dataset = _dao.get("crypt").value();
 	} else {
@@ -81,10 +80,11 @@ function ProcessGhoul(item) {
 
 function BuildDBGhoul(requestBody) {
 	var undeadRequest = JSON.parse(requestBody.result.Message.split("SelfHealing:")[1]);
+	var destination = JSON.parse(requestBody.result.dest)[0];
 	let ghoul = {
 		uid: uuid.v1(),
 		sourceApplication: requestBody.result.SourceName,
-		url: requestBody.result.des[0]+undeadRequest.Url,
+		url: destination+undeadRequest.Url,
 		httpMethod: undeadRequest.HttpMethod,
 		payLoad: undeadRequest.JsonPayLoad,
 		jsonHeaders: undeadRequest.JsonHeaders != null ? undeadRequest.JsonHeaders: "",
