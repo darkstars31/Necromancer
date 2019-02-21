@@ -1,6 +1,7 @@
 
 var config  	= require("./config");
 var _dao 		= require("./dao");
+var process 	= require('process')
 var _httpClient	= require("request-promise");
 var uuid 		= require('uuid');
 var childProc = require('child_process');
@@ -78,6 +79,7 @@ function ProcessGhoul(item) {
 	if(item.jsonHeaders){
 		httpOptions.headers = item.jsonHeaders;
 	}
+	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 	return _httpClient(httpOptions);
 }
 
