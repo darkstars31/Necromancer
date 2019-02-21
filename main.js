@@ -51,6 +51,7 @@ app.get("/resurrect", (req,res,next) => {
 	let failedProcessed = 0;
 	cryptDB.forEach(item => {
 		ProcessGhoul(item).then((result) => {
+			console.log(result);
 			_dao.get("crypt").remove(item).write();
 			successfullyProcessed++;
 		}).catch( err => {
