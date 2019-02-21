@@ -8,7 +8,7 @@
      "dest": [ "uat-ss-myvuprx1.vuhl.root.mrc.local" ],
      "_si": [ "kcdc-so-index1.vuhl.root.mrc.local", "dev" ],
      "ComputerName": "uat-ss-myvuprx1.vuhl.root.mrc.local",
-     "Message":      "INFO 2019-02-14 13:40:41,776 8 MyVuApi.Services.CrmService - CrmCoreServiceSyncFailure during Enrollment, SelfHealing: {\"Url\":\"\/account\/updateUser\/19159\",\"HttpMethod\":\"PATCH\",\"JsonPayLoad\":{\"username\":\"enrollment@regression.com\"},\"JsonHeaders\":null,\"JsonFailureStack\":null}",
+     "Message":      "INFO 2019-02-14 13:40:41,776 8 MyVuApi.Services.CrmService - CrmCoreServiceSyncFailure during Enrollment, SelfHealing: {\"Url\":\"\/myvuproxy/account\/updateUser\/19159\",\"HttpMethod\":\"PATCH\",\"JsonPayLoad\":{\"username\":\"enrollment@regression.com\"},\"JsonHeaders\":null,\"JsonFailureStack\":null}",
    
      "_pre_msg":
       "02/14/2019 01:40:41 PM\nLogName=VUHL\nSourceName=MyVuApi\nEventCode=0\nEventType=4\nType=Information\nComputerName=uat-ss-myvuprx1.vuhl.root.mrc.local\nTaskCategory=%1\nOpCode=Info\nRecordNumber=453100\nKeywords=Classic" 

@@ -46,10 +46,11 @@ app.get("/crypt", (req,res,next) => {
 });
 
 app.get("/resurrect", (req,res,next) => {
+	var finishedProcessing = false;
 	var cryptDB = _dao.get("crypt").value();
-	let successfullyProcessed = 0;
-	let failedProcessed = 0;
-	cryptDB.forEach(item => {
+	var successfullyProcessed = 0;
+	var failedProcessed = 0;
+	cryptDB.forEach( (item,index) => {
 		ProcessGhoul(item).then((result) => {
 			console.log(result);
 			_dao.get("crypt").remove(item).write();
@@ -57,11 +58,14 @@ app.get("/resurrect", (req,res,next) => {
 		}).catch( err => {
 			failedProcessed++;
 			_dao.get("crypt").find(item).assign({ retryAttempts: item.retryAttempts + 1}).write();			
-			_logger.error(`Failed to send request [${item.uid}] to ${item.url} because `, err);
-		});;
+			_logger.error(`Failed to send request [${item.uid}] to ${item.url} because StatusCode: ${err.statusCode} ${err.response.statusMessage}`);
+		}).finally(() =>{
+			if(index == cryptDB.length -1){
+				res.send({SuccessfulRequests: successfullyProcessed, FailedRequests: failedProcessed });
+			}
+		});		
 	});
 
-	res.send({SuccessfulRequests: successfullyProcessed, FailedRequests: failedProcessed });
 });
 
 app.get("/self-update", (req,res,next) => {

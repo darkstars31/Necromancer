@@ -1,6 +1,4 @@
 
-
-
 var log4js = require("log4js");
 
 var config = {
@@ -10,7 +8,7 @@ var config = {
 }
 
 config.log4jsConfig = {
-        appenders: { api: { type: "file", filename: "api.log" } },
+        appenders: { api: { type: "dateFile", filename: `api.log` } },
         categories: { default: { appenders: ["api"], level: "error" } }
 	}
 
