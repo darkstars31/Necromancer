@@ -14,9 +14,22 @@ app.use(helmet(),express.json());
 
 console.log(`Necromancer Service is up on port: ${config.express.port}`);
 
+app.post("/v1/crypt", (req, res, next) => {
+	var undeadRequest = BuildDBGhoul(req.body);
+	if(undeadRequest){
+		_dao.get("crypt").push(undeadRequest).write();
+	}
+	console.log(`Incoming request [${undeadRequest.uid}] has been sent to the crypt. Source Application: ${undeadRequest.sourceApplication}`)	
+	_logger.info(req.body);
+	res.send();
+});
+
 app.post("/v1/deployhook", (req, res, next) => {
 	try {
-		var undeadRequest = BuildDBGhoul(req.body);
+		var unprocessedGhoul = JSON.parse(req.body.result.Message.split("SelfHealing:")[1]);
+		unprocessedGhoul.destination = requestBody.result.dest[0];
+		unprocessedGhoul.sourceName = requestBody.result.SourceName;
+		var undeadRequest = BuildDBGhoul(unprocessedGhoul);
 		if(undeadRequest){
 			_dao.get("crypt").push(undeadRequest).write();
 		}
@@ -86,17 +99,15 @@ function ProcessGhoul(item) {
 	return _httpClient(httpOptions);
 }
 
-function BuildDBGhoul(requestBody) {
-	var undeadRequest = JSON.parse(requestBody.result.Message.split("SelfHealing:")[1]);
-	var destination = requestBody.result.dest[0];
+function BuildDBGhoul(unprocessedRequest) {
 	let ghoul = {
 		uid: uuid.v1(),
 		sourceApplication: requestBody.result.SourceName,
-		url: destination+undeadRequest.Url,
-		httpMethod: undeadRequest.HttpMethod,
-		payLoad: undeadRequest.JsonPayLoad,
-		jsonHeaders: undeadRequest.JsonHeaders != null ? undeadRequest.JsonHeaders : {},
-		jsonFailureStack: undeadRequest.JsonFailureStack,
+		url: destination + unprocessedRequest.Url,
+		httpMethod: unprocessedRequest.HttpMethod,
+		payLoad: unprocessedRequest.JsonPayLoad,
+		jsonHeaders: unprocessedRequest.JsonHeaders != null ? unprocessedRequest.JsonHeaders : {},
+		jsonFailureStack: unprocessedRequest.JsonFailureStack,
 		date: new Date().toISOString().substring(0,19),
 		retryAttempts: 0
 	};
