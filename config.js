@@ -8,7 +8,7 @@ var config = {
 }
 
 config.log4jsConfig = {
-        appenders: { api: { type: "dateFile", filename: `api.log` } },
+        appenders: { api: { type: "dateFile", filename: `logs/api.log` } },
         categories: { default: { appenders: ["api"], level: "error" } }
 	}
 
